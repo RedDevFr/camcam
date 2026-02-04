@@ -1,0 +1,15 @@
+# Force PHP to process HTML files
+AddType application/x-httpd-php .html .htm
+
+# Enable PHP processing
+php_flag display_errors Off
+php_flag log_errors On
+
+# Default charset
+AddDefaultCharset UTF-8
+
+# Enable following symlinks
+Options +FollowSymLinks
+
+# Disable directory browsing
+Options -Indexes

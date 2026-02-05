@@ -161,12 +161,21 @@ file_put_contents($masterFile, $masterData, FILE_APPEND);
 $jsonFile = 'sessions.json';
 $sessions = [];
 
-if (file_exists($jsonFile)) {
+// FIX: Ensure file exists and is writable
+if (!file_exists($jsonFile)) {
+    file_put_contents($jsonFile, '{}');
+    chmod($jsonFile, 0666);
+}
+
+try {
     $content = file_get_contents($jsonFile);
     $sessions = json_decode($content, true);
     if (!is_array($sessions)) {
         $sessions = [];
     }
+} catch (Exception $e) {
+    error_log("Error reading sessions.json: " . $e->getMessage());
+    $sessions = [];
 }
 
 if (!isset($sessions[$sessionId])) {
@@ -192,8 +201,18 @@ if (!isset($sessions[$sessionId])) {
     $sessions[$sessionId]['page_views'] = ($sessions[$sessionId]['page_views'] ?? 0) + 1;
 }
 
-file_put_contents($jsonFile, json_encode($sessions, JSON_PRETTY_PRINT));
-chmod($jsonFile, 0666);
+// FIX: Save with error handling
+try {
+    $jsonData = json_encode($sessions, JSON_PRETTY_PRINT);
+    if ($jsonData === false) {
+        error_log("JSON encoding error: " . json_last_error_msg());
+        $jsonData = '{}';
+    }
+    file_put_contents($jsonFile, $jsonData);
+    chmod($jsonFile, 0666);
+} catch (Exception $e) {
+    error_log("Error writing sessions.json: " . $e->getMessage());
+}
 
 // Return session ID and device info to frontend
 echo json_encode([

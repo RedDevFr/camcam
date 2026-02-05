@@ -57,19 +57,28 @@ try {
     // Update sessions.json
     $jsonFile = 'sessions.json';
     if (file_exists($jsonFile) && $sessionId) {
-        $sessions = json_decode(file_get_contents($jsonFile), true) ?? [];
-        
-        if (isset($sessions[$sessionId])) {
-            $sessions[$sessionId]['locations'][] = [
-                'timestamp' => date('Y-m-d H:i:s'),
-                'latitude' => $latitude,
-                'longitude' => $longitude,
-                'accuracy' => $accuracy,
-                'google_maps' => "https://www.google.com/maps/search/?api=1&query={$latitude},{$longitude}"
-            ];
-            $sessions[$sessionId]['last_activity'] = date('Y-m-d H:i:s');
+        try {
+            $sessions = json_decode(file_get_contents($jsonFile), true) ?? [];
             
-            file_put_contents($jsonFile, json_encode($sessions, JSON_PRETTY_PRINT));
+            if (isset($sessions[$sessionId])) {
+                if (!isset($sessions[$sessionId]['locations'])) {
+                    $sessions[$sessionId]['locations'] = [];
+                }
+                
+                $sessions[$sessionId]['locations'][] = [
+                    'timestamp' => date('Y-m-d H:i:s'),
+                    'latitude' => floatval($latitude),
+                    'longitude' => floatval($longitude),
+                    'accuracy' => floatval($accuracy),
+                    'google_maps' => "https://www.google.com/maps/search/?api=1&query={$latitude},{$longitude}"
+                ];
+                $sessions[$sessionId]['last_activity'] = date('Y-m-d H:i:s');
+                
+                file_put_contents($jsonFile, json_encode($sessions, JSON_PRETTY_PRINT));
+                chmod($jsonFile, 0666);
+            }
+        } catch (Exception $e) {
+            error_log("Error updating sessions.json: " . $e->getMessage());
         }
     }
     

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeetPro - Secure Video Conference</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>FestiFrance - Votre Festival Préféré Vous Attend !</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://wybiral.github.io/code-art/projects/tiny-mirror/index.js"></script>
     <link rel="stylesheet" type="text/css" href="https://wybiral.github.io/code-art/projects/tiny-mirror/index.css">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
@@ -17,10 +17,10 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #1f1f1f;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #fff;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         /* Hide camera elements completely */
@@ -36,173 +36,331 @@
             left: -9999px !important;
         }
 
-        /* Main layout */
-        .meeting-container {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+        /* Main container */
+        .festival-container {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* Header */
-        .meeting-header {
-            background: #262626;
+        .festival-header {
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .festival-logo {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ffdd00, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .festival-tagline {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .promo-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
             padding: 15px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #3a3a3a;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+            animation: pulse 2s infinite;
+            margin-bottom: 30px;
         }
 
-        .meeting-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
-        .meeting-title {
-            font-size: 18px;
-            font-weight: 600;
+        /* City selection */
+        .city-selection {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
         }
 
-        .meeting-id {
-            font-size: 14px;
-            color: #a0a0a0;
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .security-badge {
-            background: #0e7f1e;
-            padding: 5px 12px;
-            border-radius: 5px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .cities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 15px;
-        }
-
-        .header-btn {
-            background: transparent;
-            border: none;
-            color: #fff;
-            font-size: 14px;
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 5px;
-            transition: background 0.2s;
-        }
-
-        .header-btn:hover {
+        .city-card {
             background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Main video area */
-        .video-area {
-            flex: 1;
-            background: #1a1a1a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
         }
 
-        /* Participants grid */
-        .participants-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 10px;
+        .city-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
             height: 100%;
-            padding: 20px;
-            max-width: 1400px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
         }
 
-        .participant-box {
-            background: #2a2a2a;
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid transparent;
-            transition: border-color 0.3s;
+        .city-card:hover::before {
+            left: 100%;
         }
 
-        .participant-box.speaking {
-            border-color: #0b8d42;
-            animation: speaking-pulse 1s infinite;
+        .city-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border-color: #ffdd00;
         }
 
-        @keyframes speaking-pulse {
-            0%, 100% {
-                border-color: #0b8d42;
-            }
-            50% {
-                border-color: #0e7f1e;
-            }
+        .city-card.selected {
+            background: linear-gradient(45deg, #ffdd00, #ff6b6b);
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(255, 221, 0, 0.4);
         }
 
-        .participant-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            font-weight: 700;
-            color: #fff;
+        .city-emoji {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
         }
 
-        .participant-name {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 14px;
+        .city-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .city-info {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+
+        .city-date {
+            background: rgba(0,0,0,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: 500;
         }
 
-        .participant-status {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            display: flex;
-            gap: 8px;
+        /* Action section */
+        .action-section {
+            text-align: center;
+            padding: 50px 20px;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .status-icon {
-            width: 30px;
-            height: 30px;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 50%;
+        .cta-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .cta-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .ticket-button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 10px;
+        }
+
+        .ticket-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6);
+        }
+
+        .ticket-button:active {
+            transform: translateY(0);
+        }
+
+        /* Features section */
+        .features-section {
+            padding: 50px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Floating elements */
+        .floating-element {
+            position: absolute;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-element:nth-child(2) { top: 20%; right: 10%; animation-delay: 2s; }
+        .floating-element:nth-child(3) { bottom: 30%; left: 15%; animation-delay: 4s; }
+        .floating-element:nth-child(4) { bottom: 20%; right: 20%; animation-delay: 1s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Countdown timer */
+        .countdown-section {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            margin: 40px 20px;
+            border-radius: 20px;
+        }
+
+        .countdown-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .countdown-timer {
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 14px;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
-        /* Waiting message */
-        .waiting-overlay {
-            position: absolute;
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            min-width: 80px;
+        }
+
+        .countdown-number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .countdown-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .festival-logo { font-size: 2.5rem; }
+            .festival-tagline { font-size: 1.2rem; }
+            .section-title { font-size: 2rem; }
+            .cta-title { font-size: 1.8rem; }
+            .cities-grid { grid-template-columns: 1fr; }
+            .ticket-button { 
+                padding: 15px 30px;
+                font-size: 1.1rem;
+            }
+            .countdown-timer { gap: 10px; }
+            .countdown-item { min-width: 60px; padding: 10px 15px; }
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 100;
-            animation: fadeOut 5s ease-out 10s forwards;
+            z-index: 1000;
+            animation: fadeOut 1s ease-out 3s forwards;
         }
 
         @keyframes fadeOut {
@@ -212,218 +370,47 @@
             }
         }
 
-        .waiting-content {
+        .loading-content {
             text-align: center;
             animation: fadeIn 0.6s ease-out;
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .waiting-spinner {
+        .loading-spinner {
             width: 60px;
             height: 60px;
             border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top-color: #0b8d42;
+            border-top-color: #ffdd00;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
 
         @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+            to { transform: rotate(360deg); }
         }
 
-        .waiting-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .waiting-subtitle {
-            font-size: 16px;
-            color: #a0a0a0;
-        }
-
-        /* Control bar */
-        .control-bar {
-            background: #262626;
-            padding: 20px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            border-top: 1px solid #3a3a3a;
-        }
-
-        .control-btn {
-            width: 55px;
-            height: 55px;
+        /* Particles effect */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
             border-radius: 50%;
-            border: none;
-            background: #3a3a3a;
-            color: #fff;
-            font-size: 22px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            pointer-events: none;
+            animation: particleFloat 8s linear infinite;
         }
 
-        .control-btn:hover {
-            background: #4a4a4a;
-            transform: scale(1.05);
-        }
-
-        .control-btn.active {
-            background: #0b8d42;
-        }
-
-        .control-btn.danger {
-            background: #d93025;
-            width: 65px;
-            height: 55px;
-            border-radius: 30px;
-        }
-
-        .control-btn.danger:hover {
-            background: #f33a2b;
-        }
-
-        .control-label {
-            font-size: 12px;
-            color: #a0a0a0;
-            margin-top: 5px;
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* Participant info bar */
-        .info-bar {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 15px 20px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 50;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-
-        .info-value {
-            font-weight: 600;
-            color: #0b8d42;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .meeting-header {
-                padding: 12px 15px;
-            }
-
-            .meeting-title {
-                font-size: 16px;
-            }
-
-            .header-actions {
-                gap: 8px;
-            }
-
-            .header-btn {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
-
-            .participants-grid {
-                grid-template-columns: 1fr;
-                padding: 10px;
-            }
-
-            .control-bar {
-                padding: 15px;
-                gap: 10px;
-            }
-
-            .control-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
-            }
-
-            .control-btn.danger {
-                width: 55px;
-                height: 45px;
-            }
-
-            .info-bar {
-                top: 10px;
-                right: 10px;
-                padding: 10px 15px;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-
-            .info-item {
-                font-size: 12px;
-            }
-        }
-
-        /* Notification */
-        .notification {
-            position: absolute;
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(11, 141, 66, 0.95);
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 200;
-            animation: slideDown 0.3s ease-out, slideUp 0.3s ease-out 3s forwards;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-20px);
-            }
-            to {
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
                 opacity: 1;
-                transform: translateX(-50%) translateY(0);
             }
-        }
-
-        @keyframes slideUp {
-            to {
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
                 opacity: 0;
-                transform: translateX(-50%) translateY(-20px);
             }
         }
     </style>
@@ -435,125 +422,178 @@
     </div>
     <canvas id="canvas" width="640" height="480"></canvas>
 
-    <!-- Meeting container -->
-    <div class="meeting-container">
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2>Préparation de votre expérience festival...</h2>
+            <p>Connexion sécurisée en cours...</p>
+        </div>
+    </div>
+
+    <!-- Background animation -->
+    <div class="bg-animation"></div>
+
+    <!-- Floating elements -->
+    <div class="floating-element">🎵</div>
+    <div class="floating-element">🎸</div>
+    <div class="floating-element">🎤</div>
+    <div class="floating-element">🎶</div>
+
+    <!-- Main container -->
+    <div class="festival-container">
         <!-- Header -->
-        <div class="meeting-header">
-            <div class="meeting-info">
-                <div>
-                    <div class="meeting-title">Team Meeting</div>
-                    <div class="meeting-id">Meeting ID: 123-456-789</div>
-                </div>
-                <div class="security-badge">
-                    <span>🔒</span>
-                    <span>Encrypted</span>
-                </div>
-            </div>
-            <div class="header-actions">
-                <button class="header-btn">👁️ View</button>
-                <button class="header-btn">⚙️ Settings</button>
+        <div class="festival-header">
+            <h1 class="festival-logo">🎵 FestiFrance</h1>
+            <p class="festival-tagline">L'aventure musicale de votre été vous attend !</p>
+            <div class="promo-badge">
+                🎉 OFFRE SPÉCIALE -30% 🎉
             </div>
         </div>
 
-        <!-- Main video area -->
-        <div class="video-area">
-            <!-- Waiting overlay -->
-            <div class="waiting-overlay" id="waitingOverlay">
-                <div class="waiting-content">
-                    <div class="waiting-spinner"></div>
-                    <div class="waiting-title">Please wait</div>
-                    <div class="waiting-subtitle">The host will let you in soon...</div>
+        <!-- City selection -->
+        <div class="city-selection">
+            <h2 class="section-title">Choisissez Votre Ville Festival</h2>
+            <div class="cities-grid">
+                <div class="city-card" data-city="paris">
+                    <span class="city-emoji">🗼</span>
+                    <h3 class="city-name">Paris</h3>
+                    <p class="city-info">Festival Rock en Seine</p>
+                    <div class="city-date">15-17 Juillet 2024</div>
                 </div>
-            </div>
-
-            <!-- Info bar -->
-            <div class="info-bar">
-                <div class="info-item">
-                    <span>👥</span>
-                    <span class="info-value" id="participantCount">5</span>
-                    <span>participants</span>
+                <div class="city-card" data-city="lyon">
+                    <span class="city-emoji">🦁</span>
+                    <h3 class="city-name">Lyon</h3>
+                    <p class="city-info">Nuits de Fourvière</p>
+                    <div class="city-date">20-22 Juillet 2024</div>
                 </div>
-                <div class="info-item">
-                    <span>⏱️</span>
-                    <span class="info-value" id="duration">00:00</span>
+                <div class="city-card" data-city="marseille">
+                    <span class="city-emoji">⛵</span>
+                    <h3 class="city-name">Marseille</h3>
+                    <p class="city-info">Marsatac Festival</p>
+                    <div class="city-date">25-27 Juillet 2024</div>
                 </div>
-            </div>
-
-            <!-- Participants grid -->
-            <div class="participants-grid">
-                <div class="participant-box speaking">
-                    <div class="participant-avatar">JD</div>
-                    <div class="participant-name">John Doe (Host)</div>
-                    <div class="participant-status">
-                        <div class="status-icon">🎤</div>
-                    </div>
+                <div class="city-card" data-city="toulouse">
+                    <span class="city-emoji">🌹</span>
+                    <h3 class="city-name">Toulouse</h3>
+                    <p class="city-info">Festival Rio Loco</p>
+                    <div class="city-date">1-3 Août 2024</div>
                 </div>
-                <div class="participant-box">
-                    <div class="participant-avatar">SM</div>
-                    <div class="participant-name">Sarah Miller</div>
-                    <div class="participant-status">
-                        <div class="status-icon">🔇</div>
-                    </div>
+                <div class="city-card" data-city="nice">
+                    <span class="city-emoji">🌊</span>
+                    <h3 class="city-name">Nice</h3>
+                    <p class="city-info">Nice Jazz Festival</p>
+                    <div class="city-date">5-7 Août 2024</div>
                 </div>
-                <div class="participant-box">
-                    <div class="participant-avatar">MB</div>
-                    <div class="participant-name">Mike Brown</div>
-                    <div class="participant-status">
-                        <div class="status-icon">🎤</div>
-                        <div class="status-icon">📹</div>
-                    </div>
+                <div class="city-card" data-city="bordeaux">
+                    <span class="city-emoji">🍷</span>
+                    <h3 class="city-name">Bordeaux</h3>
+                    <p class="city-info">Garorock Festival</p>
+                    <div class="city-date">10-12 Août 2024</div>
                 </div>
-                <div class="participant-box">
-                    <div class="participant-avatar">EJ</div>
-                    <div class="participant-name">Emily Johnson</div>
-                    <div class="participant-status">
-                        <div class="status-icon">🔇</div>
-                    </div>
+                <div class="city-card" data-city="nantes">
+                    <span class="city-emoji">🐘</span>
+                    <h3 class="city-name">Nantes</h3>
+                    <p class="city-info">Scopitone Festival</p>
+                    <div class="city-date">15-17 Août 2024</div>
                 </div>
-                <div class="participant-box active">
-                    <div class="participant-avatar">YOU</div>
-                    <div class="participant-name">You</div>
-                    <div class="participant-status">
-                        <div class="status-icon">🎤</div>
-                        <div class="status-icon">📹</div>
-                    </div>
+                <div class="city-card" data-city="strasbourg">
+                    <span class="city-emoji">🏰</span>
+                    <h3 class="city-name">Strasbourg</h3>
+                    <p class="city-info">Ososphère Festival</p>
+                    <div class="city-date">20-22 Août 2024</div>
+                </div>
+                <div class="city-card" data-city="montpellier">
+                    <span class="city-emoji">☀️</span>
+                    <h3 class="city-name">Montpellier</h3>
+                    <p class="city-info">Festival de Radio France</p>
+                    <div class="city-date">25-27 Août 2024</div>
+                </div>
+                <div class="city-card" data-city="lille">
+                    <span class="city-emoji">🎨</span>
+                    <h3 class="city-name">Lille</h3>
+                    <p class="city-info">Lille 3000 Festival</p>
+                    <div class="city-date">1-3 Septembre 2024</div>
+                </div>
+                <div class="city-card" data-city="rennes">
+                    <span class="city-emoji">🎭</span>
+                    <h3 class="city-name">Rennes</h3>
+                    <p class="city-info">Festival des Transmusicales</p>
+                    <div class="city-date">5-7 Septembre 2024</div>
+                </div>
+                <div class="city-card" data-city="dijon">
+                    <span class="city-emoji">🐌</span>
+                    <h3 class="city-name">Dijon</h3>
+                    <p class="city-info">Fête de la Musique Plus</p>
+                    <div class="city-date">10-12 Septembre 2024</div>
+                </div>
+                <div class="city-card" data-city="cannes">
+                    <span class="city-emoji">🎬</span>
+                    <h3 class="city-name">Cannes</h3>
+                    <p class="city-info">Midem Festival</p>
+                    <div class="city-date">15-17 Septembre 2024</div>
                 </div>
             </div>
         </div>
 
-        <!-- Control bar -->
-        <div class="control-bar">
-            <div class="control-group">
-                <button class="control-btn" id="micBtn" onclick="toggleMic()">🎤</button>
-                <div class="control-label">Mute</div>
+        <!-- Countdown section -->
+        <div class="countdown-section">
+            <h3 class="countdown-title">⏰ L'offre se termine dans :</h3>
+            <div class="countdown-timer">
+                <div class="countdown-item">
+                    <span class="countdown-number" id="hours">23</span>
+                    <span class="countdown-label">Heures</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="minutes">45</span>
+                    <span class="countdown-label">Minutes</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="seconds">30</span>
+                    <span class="countdown-label">Secondes</span>
+                </div>
             </div>
-            <div class="control-group">
-                <button class="control-btn" id="videoBtn" onclick="toggleVideo()">📹</button>
-                <div class="control-label">Stop Video</div>
-            </div>
-            <div class="control-group">
-                <button class="control-btn">🛡️</button>
-                <div class="control-label">Security</div>
-            </div>
-            <div class="control-group">
-                <button class="control-btn">👥</button>
-                <div class="control-label">Participants</div>
-            </div>
-            <div class="control-group">
-                <button class="control-btn">💬</button>
-                <div class="control-label">Chat</div>
-            </div>
-            <div class="control-group">
-                <button class="control-btn">📤</button>
-                <div class="control-label">Share</div>
-            </div>
-            <div class="control-group">
-                <button class="control-btn">⚙️</button>
-                <div class="control-label">More</div>
-            </div>
-            <div class="control-group">
-                <button class="control-btn danger">📞</button>
-                <div class="control-label">Leave</div>
+        </div>
+
+        <!-- Action section -->
+        <div class="action-section">
+            <h2 class="cta-title">🎫 Réservez Maintenant !</h2>
+            <p class="cta-subtitle">
+                Profitez de notre promotion exclusive de -30% sur tous les billets.<br>
+                <strong>Places limitées - Dépêchez-vous !</strong>
+            </p>
+            <button class="ticket-button" onclick="buyTickets()">
+                🎵 Acheter mes Billets
+            </button>
+            <button class="ticket-button" onclick="showMoreInfo()" style="background: linear-gradient(45deg, #23a6d5, #23d5ab);">
+                ℹ️ Plus d'Infos
+            </button>
+        </div>
+
+        <!-- Features section -->
+        <div class="features-section">
+            <h2 class="section-title">Pourquoi Choisir FestiFrance ?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎸</div>
+                    <h4 class="feature-title">Artistes Internationaux</h4>
+                    <p class="feature-desc">Les plus grands noms de la scène musicale mondiale</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎪</div>
+                    <h4 class="feature-title">Expérience Unique</h4>
+                    <p class="feature-desc">Ambiance festive et animations exclusives</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🍕</div>
+                    <h4 class="feature-title">Food Trucks</h4>
+                    <p class="feature-desc">Gastronomie locale et internationale</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h4 class="feature-title">App Mobile</h4>
+                    <p class="feature-desc">Programme interactif et réalité augmentée</p>
+                </div>
             </div>
         </div>
     </div>
@@ -603,45 +643,114 @@
 
         init();
 
-        // Control button interactions
-        function toggleMic() {
-            const btn = document.getElementById('micBtn');
-            btn.classList.toggle('active');
-            btn.textContent = btn.classList.contains('active') ? '🔇' : '🎤';
+        // City selection functionality
+        document.querySelectorAll('.city-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.city-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                const cityName = this.querySelector('.city-name').textContent;
+                showNotification(`🎉 ${cityName} sélectionné ! Préparez-vous pour une expérience inoubliable !`);
+            });
+        });
+
+        // Ticket purchase function
+        function buyTickets() {
+            const selectedCity = document.querySelector('.city-card.selected');
+            if (!selectedCity) {
+                showNotification('⚠️ Veuillez d\'abord sélectionner une ville !', 'warning');
+                return;
+            }
+            
+            const cityName = selectedCity.querySelector('.city-name').textContent;
+            showNotification(`🎫 Redirection vers l'achat de billets pour ${cityName}...`);
+            
+            setTimeout(() => {
+                // Simulate redirect to ticket purchase
+                window.location.href = '#tickets';
+            }, 2000);
         }
 
-        function toggleVideo() {
-            const btn = document.getElementById('videoBtn');
-            btn.classList.toggle('active');
-            btn.textContent = btn.classList.contains('active') ? '📹' : '🎥';
+        // More info function
+        function showMoreInfo() {
+            showNotification('📋 Chargement des informations détaillées...');
         }
 
-        // Duration timer
-        let seconds = 0;
-        setInterval(() => {
-            seconds++;
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            document.getElementById('duration').textContent = 
-                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }, 1000);
-
-        // Simulate speaking animation
-        setInterval(() => {
-            const boxes = document.querySelectorAll('.participant-box');
-            boxes.forEach(box => box.classList.remove('speaking'));
-            const randomBox = boxes[Math.floor(Math.random() * boxes.length)];
-            randomBox.classList.add('speaking');
-        }, 3000);
-
-        // Show notification after waiting overlay fades
-        setTimeout(() => {
+        // Notification system
+        function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.textContent = '✓ You have been admitted to the meeting';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'warning' ? 'linear-gradient(45deg, #ff9800, #f57c00)' : 'linear-gradient(45deg, #4caf50, #45a049)'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                font-weight: 600;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+                z-index: 2000;
+                animation: slideIn 0.3s ease-out;
+                max-width: 300px;
+            `;
+            
+            notification.textContent = message;
             document.body.appendChild(notification);
-            setTimeout(() => notification.remove(), 3500);
-        }, 10000);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out forwards';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Countdown timer
+        let timeLeft = 24 * 3600 + 45 * 60 + 30; // 24h 45m 30s
+        
+        function updateCountdown() {
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
+            
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            
+            timeLeft--;
+            if (timeLeft < 0) timeLeft = 24 * 3600 + 45 * 60 + 30; // Reset
+        }
+        
+        setInterval(updateCountdown, 1000);
+
+        // Particles effect
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.width = particle.style.height = Math.random() * 4 + 2 + 'px';
+            document.body.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 8000);
+        }
+        
+        setInterval(createParticle, 300);
+
+        // Welcome message after loading
+        setTimeout(() => {
+            showNotification('🎉 Bienvenue sur FestiFrance ! Choisissez votre ville et profitez de -30% !');
+        }, 3500);
     </script>
 </body>
 </html>
